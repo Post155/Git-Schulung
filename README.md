@@ -1,25 +1,23 @@
 # Git & GitHub Workshop
 
-Willkommen zum Git & GitHub Workshop.
+Willkommen zum **Git & GitHub Workshop**!
 
 Dieses Repository begleitet die Schulung und dient gleichzeitig als Live-Demo für Git, GitHub und Visual Studio Code.
 
----
-
-# Agenda
+## Agenda
 
 1. Versionsverwaltung
-2. Git / GitHub einrichten
-3. Git Grundlagen
-4. GitHub Grundlagen
-5. Entwicklungsumgebungen (VS Code)
+2. Git und GitHub einrichten
+3. Git-Grundlagen
+4. GitHub-Grundlagen
+5. Entwicklungsumgebungen und Visual Studio Code
 6. Learn Git Branching
 
 ---
 
-# Versionsverwaltung
+# 1. Versionsverwaltung
 
-Versionsverwaltung speichert Änderungen an Dateien und macht diese nachvollziehbar.
+Versionsverwaltung speichert Änderungen an Dateien und macht sie nachvollziehbar. Dadurch können frühere Versionen wiederhergestellt und Änderungen zwischen mehreren Entwicklern koordiniert werden.
 
 ## Vorteile
 
@@ -27,560 +25,766 @@ Versionsverwaltung speichert Änderungen an Dateien und macht diese nachvollzieh
 - Frühere Versionen wiederherstellen
 - Fehler leichter finden
 - Gemeinsam im Team arbeiten
-- Konflikte kontrolliert lösen
+- Änderungen kontrolliert zusammenführen
+- Verschiedene Entwicklungsstände verwalten
 
-## Zentral vs. Verteilt
+## Zentral vs. verteilt
+
+Bei einer zentralen Versionsverwaltung liegt die zentrale Historie auf einem Server. Bei einer verteilten Versionsverwaltung wie Git besitzt jeder Entwickler eine vollständige lokale Repository-Historie.
 
 ```mermaid
-flowchart LR
+flowchart TD
+    subgraph Central["Zentrale Versionsverwaltung"]
+        A["Zentraler Server"]
+        B["Entwickler A"]
+        C["Entwickler B"]
+        B <--> A
+        C <--> A
+    end
 
-    A[Zentrale Versionsverwaltung]
-    A --> B[Zentraler Server]
-    B --> C[Entwickler A]
-    B --> D[Entwickler B]
-
-    E[Git]
-    E --> F[Entwickler A besitzt komplette Historie]
-    E --> G[Entwickler B besitzt komplette Historie]
+    subgraph Distributed["Verteilte Versionsverwaltung (Git)"]
+        D["Repository A<br/>Eigene Historie"]
+        E["Repository B<br/>Eigene Historie"]
+        D <--> E
+    end
 ```
 
 ---
 
-# Git Grundlagen
+# 2. Git-Grundlagen
 
 ## Was ist Git?
 
-Git ist ein verteiltes Versionsverwaltungssystem, das Änderungen an Dateien und Projekten verfolgt.
+Git ist ein verteiltes Versionsverwaltungssystem, das Änderungen an Dateien und Projekten verfolgt. Es ermöglicht Entwicklern, Änderungen lokal zu speichern, verschiedene Entwicklungszweige zu erstellen und gemeinsam an Projekten zu arbeiten.
 
 ### Eigenschaften
 
-- Snapshots statt Änderungen
-- Schnell & lokal
-- Datenintegrität
-- Daten gehen selten verloren
+- **Snapshots:** Git speichert Projektstände und verwaltet Änderungen effizient.
+- **Schnell und lokal:** Viele Git-Befehle funktionieren ohne Internetverbindung.
+- **Datenintegrität:** Git verwendet Hashes, um Inhalte eindeutig zu identifizieren und Veränderungen zu erkennen.
+- **Branches:** Verschiedene Funktionen können unabhängig voneinander entwickelt werden.
+- **Teamarbeit:** Änderungen können zwischen lokalen und entfernten Repositorys ausgetauscht werden.
 
 ```mermaid
 mindmap
-  root((Git))
-    Snapshots
-    Branches
-    Commits
-    Historie
-    Teamarbeit
+    root((Git))
+        Snapshots
+        Branches
+        Commits
+        Historie
+        Teamarbeit
+        Datenintegrität
 ```
 
----
+## Die drei Zustände einer Datei
 
-# Die drei Zustände einer Datei
+Git unterscheidet drei wichtige Zustände einer Datei:
 
 ```mermaid
 flowchart LR
-    A[🟠 Modified] -->|git add| B[🟢 Staged]
-    B -->|git commit| C[⚫ Committed]
+    A["Modified<br/>Geändert"] -->|git add| B["Staged<br/>Vorgemerkt"]
+    B -->|git commit| C["Committed<br/>Gespeichert"]
 ```
 
 ### Modified
 
-- Datei wurde geändert
+Die Datei wurde verändert, aber die Änderungen wurden noch nicht für den nächsten Commit vorgemerkt.
 
 ### Staged
 
-- Änderung für den nächsten Commit vorgemerkt
+Die Änderungen wurden mit `git add` für den nächsten Commit ausgewählt.
 
 ### Committed
 
-- Änderung dauerhaft gespeichert
+Die vorgemerkten Änderungen wurden mit `git commit` als neuer Stand in der lokalen Repository-Historie gespeichert.
 
----
-
-# Git Workflow
+## Der Git-Workflow
 
 ```mermaid
 flowchart LR
-    A[Working Directory] -->|git add| B[Staging Area]
-    B -->|git commit| C[Local Repository]
+    A["Working Directory<br/>Dateien bearbeiten"]
+    B["Staging Area<br/>Änderungen auswählen"]
+    C["Local Repository<br/>Commit erstellen"]
+
+    A -->|git add| B
+    B -->|git commit| C
 ```
 
----
+### Wichtige Befehle
 
-# Was ist ein Repository?
+```bash
+git status
+git add datei.txt
+git add .
+git commit -m "Beschreibung der Änderung"
+git log
+```
 
-Ein Repository enthält:
+- `git status`: Zeigt den aktuellen Zustand des Repositorys.
+- `git add datei.txt`: Nimmt eine bestimmte Datei in die Staging Area auf.
+- `git add .`: Nimmt Änderungen im aktuellen Verzeichnis und seinen Unterverzeichnissen auf.
+- `git commit -m "..."`: Speichert die vorgemerkten Änderungen als Commit.
+- `git log`: Zeigt die Commit-Historie.
 
-- Projektdateien
+## Was ist ein Repository?
+
+Ein Repository ist der Bereich, in dem Git die Projektdateien und ihre Versionsgeschichte verwaltet.
+
+Es enthält unter anderem:
+
+- Projektdateien und deren Versionsstände
 - Commits
 - Branches
 - Tags
-- Historie
+- Die Änderungshistorie
 
 ```mermaid
 flowchart TD
-    A[Repository]
-    A --> B[Dateien]
-    A --> C[Commits]
-    A --> D[Branches]
-    A --> E[Tags]
-    A --> F[Historie]
+    A["Git-Repository"]
+    A --> B["Projektdateien"]
+    A --> C["Commits"]
+    A --> D["Branches"]
+    A --> E["Tags"]
+    A --> F["Historie"]
 ```
 
----
+## Was ist ein Branch?
 
-# Was ist ein Branch?
-
-Branches ermöglichen die Entwicklung neuer Funktionen unabhängig vom Hauptzweig.
+Ein Branch ist ein Entwicklungszweig. Er ermöglicht es, neue Funktionen oder Fehlerkorrekturen unabhängig vom Hauptentwicklungszweig zu bearbeiten.
 
 ```mermaid
 gitGraph
-   commit id: "Initial Commit"
-   commit id: "Login"
+    commit id: "Projektstart"
+    commit id: "Login"
 
-   branch feature
-   checkout feature
+    branch feature
+    checkout feature
+    commit id: "Neue Funktion"
+    commit id: "Bugfix"
 
-   commit id: "Neue Funktion"
-   commit id: "Bugfix"
-
-   checkout main
+    checkout main
+    commit id: "Dokumentation"
 ```
 
 ### Vorteile
 
-- Sichere Entwicklung
-- Teamarbeit
-- Isolierte Änderungen
+- Neue Funktionen unabhängig entwickeln
+- Änderungen vor der Übernahme testen
+- Mehrere Aufgaben parallel bearbeiten
+- Zusammenarbeit im Team vereinfachen
 
----
+### Wichtige Befehle
 
-# Was ist ein Commit?
+```bash
+git branch
+git branch feature
+git switch feature
+git switch main
+```
 
-Ein Commit speichert einen Snapshot des Projekts.
+- `git branch`: Listet lokale Branches auf.
+- `git branch feature`: Erstellt einen Branch namens `feature`.
+- `git switch feature`: Wechselt zum Branch `feature`.
+- `git switch main`: Wechselt zum Branch `main`.
+
+## Was ist ein Commit?
+
+Ein Commit speichert einen bestimmten Projektstand in der lokalen Git-Historie. Er enthält unter anderem Informationen zum gespeicherten Zustand, zum Autor und zum Zeitpunkt der Änderung.
 
 ```mermaid
 gitGraph
-   commit id: "Projektstart"
-   commit id: "Login"
-   commit id: "Bugfix"
-   commit id: "Release"
+    commit id: "Projektstart"
+    commit id: "Login"
+    commit id: "Bugfix"
+    commit id: "Release"
 ```
-
-### Commit
-
-- Speichert den aktuellen Projektstand
-- Besitzt einen eindeutigen Hash
-- Macht Änderungen nachvollziehbar
-
----
-
-# Was ist .gitignore?
-
-Die Datei `.gitignore` definiert Dateien und Ordner, die Git ignorieren soll.
-
-## Beispiele
-
-```gitignore
-*.log
-build/
-.env
-node_modul*s/
-```
-
-### Vorteile
-
-- Ver*indert unnötige Commits
-* Ver*rauliche Daten bleiben lokal
-- Rep*sitory bleibt übersichtlich
-
----
-
-* Was ist Checkout?
-
-Checkout*we*hselt zwischen Branches.
-
-```merma*d
-gitGraph
-   *commit
-    branch develop
-    chec*out develop
-    commit
-    commit*    checkout main
-```
-
-*## Eigenschaften
-
-- Wechselt den a*tuellen Branch
-- Aktual*siert die Dateien im Arbeits*erzeichnis
-- Off*ne Änderungen sollten*vorher committet werden
-
----
-
-* Was ist Merge?
-
-Merge führt*Änderungen eines Branches in einen*anderen Branch zusammen.
-
-```merma*d
-gitGraph
-   commit*id:"Start"
-
-   branch develop
-   c*eckout develop
-   commit id:"Featu*e"
-
-   checkout main
-   commit*id:"Hotfix"
-
-   merge develop
-```
-*### Eigenschaften
-
-- Änderungen*werden*zusammengeführt
-- Git*versucht Konflikte automatisch zu *ösen
-- Kann Merge-Konflikte erzeug*n
-
----
-
-* Was ist Rebase?
-
-Rebase*verschiebt Commits auf die Spitze *ines anderen Branches.
-
-## Vor dem*Rebase
-
-```mer*aid
-gitGraph
-   commit id:"A"
-
-   *ranch feature
-   checkout feature
-*  commit id:"B"
-   commit*id:"C"
-
-   checkout main
-   commit*id:"D"
-```
-
-*# Nach dem Rebase
-
-```mer*aid
-gitGraph
-   commit id:"A"
-  *commit id:"D"
-  *commit id:"B'"
-   commit id:"C'"
-`*`
-
-*## Vorteile*
-- Saubere Historie
--*Wen*ger Merge-Commits
-- Übersichtliche* Verlauf
-
----
-
-# Was ist ein Merge*Konflikt?
-
-Ein Merge-Konflikt ents*eht, wenn Git Änderungen nicht aut*matisch zusammenführen kann.
-
-```m*rmaid
-gitGraph
-   commit id:"Hello*World"
-
-   branch branchA
-   check*ut branchA
-   commit id:"Hello Peo*le"
-
-   checkout main
-
-   branch b*anchB
-   checkout branchB
-   commi* id:"Hello Friends"
-```
-
-### Beisp*el
-
-```text
-<<<<<<< HEAD
-Hello Peo*le
-=======
-Hello Friends
->>>>>>> b*anchB
-```
-
----
-
-# Was ist ein Tag?*
-Tags markieren wichtige Commits.
-*```mermaid
-gitGraph
-   commit id:"*rojektstart"
-   commit*id:"Login"
-   commit*id:"v1.0"
-   commit id:"Bugfix"
-``*
-
-*``bash
-git tag v1.0
-```
-
-*## Typische Verwendungen
-
-* Releases
-- Me*lensteine
-- Version*n
-
-*--
-
-# Was ist Git Bisect?
-
-Git Bis*ct hilft dabei, den fehlerverursac*enden Commit zu finden.
-
-```mermai*
-flowchart LR
-    A*v1.0 GOOD] --> B[Test]
-    B -->*C[Test]
-    C -->*D[Test]
-    D -->*E[First Bad Commit]
-```
-
-### Eigen*chaften
-
-- Ver*endet Binärsuche
-- Halb*ert den Suchbereich nach*jedem Test
-- Spart*Zeit bei der Fehlersuche
-
----
-
-# G*tHub Grundlagen
-
-## Was ist GitHub*
-
-GitHub*ist eine Cloud-Plattform für Git-R*positories.
 
 ### Eigenschaften
 
-- *entrale Speicherung
-- Teamarbeit
--*Synchronisation
-- Projektverwaltun*
+- Speichert den vorgemerkten Projektstand
+- Besitzt einen eindeutigen Hash
+- Enthält eine Commit-Nachricht
+- Macht Änderungen nachvollziehbar
+- Baut auf vorherigen Commits auf
 
-```mermaid
-mindmap
-  root((GitHu*))
-    Re*ositories
-    Pull Requests
-    Is*ues
-    Collaboration
-    Cloud
-``*
+### Beispiel
 
-*--
-
-# Was ist ein Remote Repositor*?
-
-Ein Remote*Repository befindet sich auf einem*Server und ermöglicht Zusammenarbe*t.
-
-```mermaid
-flowchart LR
-    A[*ocal Repository]
-    B[GitHub Repo*itory]
-
-    A <-->|Push / Pull| B
-*``
-
----
-
-# Was ist Clone?
-
-Clone e*stellt eine vollständige Kopie ein*s Repositorys.
-
-```mermaid
-flowcha*t LR
-    A[GitHub Repository]
-    *[Local Repository]
-
-    A -->|git *lone| B
+```bash
+git add .
+git commit -m "Login-Funktion hinzugefügt"
 ```
 
-*``*ash
-git clone https://github.com/u*ername/repository.git
+**Tipp:** Commit-Nachrichten sollten kurz und aussagekräftig beschreiben, was geändert wurde.
+
+## Was ist `.gitignore`?
+
+Die Datei `.gitignore` legt fest, welche nicht bereits von Git verfolgten Dateien und Ordner ignoriert werden sollen.
+
+### Beispiel
+
+```gitignore
+# Logdateien
+*.log
+
+# Build-Ausgaben
+build/
+dist/
+
+# Umgebungsvariablen und Geheimnisse
+.env
+
+# Abhängigkeiten von Node.js
+node_modules/
+
+# Betriebssystemdateien
+.DS_Store
+Thumbs.db
 ```
-
----
-
-# *ush, Pull & Sync
-
-```mer*aid
-flowchart LR
-    A*Local Repository]
-    B[GitHub Rep*sitory]
-
-    A -->*git push| B
-    B -->|git pull| A
-*``
-
-*## Push
-
-Änder*ngen hochladen.
-
-### Pull
-
-Änderun*en herunterladen.
-
-### Sync
-
-Be*de Repositorys aktuell halten.
-
---*
-
-* Was ist ein Pull Request?
-
-Ein Pu*l Request beantragt die Übernahme *on Änderungen.
-
-```mermaid
-flowcha*t TD
-
-    A[Feature Branch]
-    B[*ommit]
-    C[Push]
-    D[*ull Request]
-    E[Code Review]
-  * F[Merge]
-    G[main]
-
-    A --> B*    B*--> C
-    C --> D
-    D --> E
-    **--> F
-    F --> G
-```
-
-### Vorteil*
-
-- Hö*ere Codequalität
-- Transparenz
-- K*ntrolle vor dem Merge
-
----
-
-# Was *st ein Fork?
-
-Ein Fork ist eine Ko*ie eines fremden Repositorys.
-
-```*ermaid
-flowchart LR
-    A[Original Repository]
-    B[Eigener Fork]
-  * C[Lokales Repository]
-
-    A -->|*ork| B
-    B -->|Clone| C
-    C --*|Push| B
-    B -->|Pull Request| A*```
 
 ### Vorteile
 
-- Mitarbeit ohn* Schreibrechte
-- Eigene Experiment*
--*Open-*ource-Beiträge
+- Verhindert unnötige Dateien im Repository
+- Hält das Repository übersichtlich
+- Verhindert, dass bestimmte lokale Dateien versehentlich neu aufgenommen werden
 
----
+**Wichtig:** `.gitignore` entfernt keine Dateien, die Git bereits verfolgt. Bereits versionierte Dateien müssen bei Bedarf gesondert aus der Versionsverwaltung entfernt werden. Geheimnisse wie Passwörter oder API-Schlüssel sollten grundsätzlich nicht committet werden.
 
-# Was sind Is*ues?
+## Was ist Checkout?
 
-Issues helfen*beim Verwalten von Aufgaben und Fe*lern.
+`git checkout` ist ein älterer, vielseitiger Git-Befehl. Er kann unter anderem zwischen Branches wechseln oder bestimmte Dateistände wiederherstellen.
+
+Für das reine Wechseln zwischen Branches wird heute häufig `git switch` verwendet.
+
+### Beispiel
+
+```bash
+git switch main
+git switch feature
+```
+
+Alternativ mit dem älteren Befehl:
+
+```bash
+git checkout main
+git checkout feature
+```
+
+### Eigenschaften
+
+- Wechselt den aktuellen Branch
+- Aktualisiert die Dateien im Arbeitsverzeichnis entsprechend dem ausgewählten Stand
+- Kann auch zum Wiederherstellen bestimmter Dateistände verwendet werden
+
+**Tipp:** Vor einem Branch-Wechsel sollte man den Zustand der Arbeitsdateien prüfen. Git verhindert in bestimmten Fällen einen Wechsel, wenn lokale Änderungen überschrieben würden.
+
+## Was ist Merge?
+
+Merge führt Änderungen aus einem Branch in einen anderen Branch zusammen.
+
+```mermaid
+gitGraph
+    commit id: "Start"
+
+    branch develop
+    checkout develop
+    commit id: "Feature"
+
+    checkout main
+    commit id: "Hotfix"
+
+    merge develop
+```
+
+### Eigenschaften
+
+- Führt Entwicklungsstände zusammen
+- Bewahrt die ursprünglichen Commits
+- Kann einen zusätzlichen Merge-Commit erzeugen
+- Kann Merge-Konflikte verursachen
+
+### Beispiel
+
+```bash
+git switch main
+git merge develop
+```
+
+In diesem Beispiel werden die Änderungen aus `develop` in `main` integriert.
+
+## Was ist Rebase?
+
+Rebase setzt Commits eines Branches auf einen anderen Ausgangspunkt. Dadurch kann eine lineare Commit-Historie entstehen.
+
+### Vor dem Rebase
+
+```mermaid
+gitGraph
+    commit id: "A"
+
+    branch feature
+    checkout feature
+    commit id: "B"
+    commit id: "C"
+
+    checkout main
+    commit id: "D"
+```
+
+### Nach dem Rebase
+
+```mermaid
+gitGraph
+    commit id: "A"
+    commit id: "D"
+    commit id: "B'"
+    commit id: "C'"
+```
+
+Die Commits `B` und `C` werden beim Rebase auf Grundlage des neuen Ausgangspunkts neu erstellt. Deshalb erhalten sie neue Commit-Hashes.
+
+### Beispiel
+
+```bash
+git switch feature
+git rebase main
+```
+
+### Vorteile
+
+- Kann eine lineare Historie erzeugen
+- Vermeidet zusätzliche Merge-Commits in vielen Arbeitsabläufen
+- Macht die Entwicklungsgeschichte oft übersichtlicher
+
+**Wichtig:** Rebase verändert die Commit-Historie. Bereits gemeinsam genutzte Commits sollten deshalb nicht ohne Absprache umgeschrieben werden.
+
+## Was ist ein Merge-Konflikt?
+
+Ein Merge-Konflikt entsteht, wenn Git Änderungen nicht automatisch zusammenführen kann. Der Entwickler muss dann entscheiden, welche Inhalte übernommen werden sollen.
+
+### Beispiel
+
+Angenommen, zwei Branches ändern dieselbe Zeile unterschiedlich:
+
+```text
+<<<<<<< HEAD
+Hello People
+=======
+Hello Friends
+>>>>>>> branchB
+```
+
+Die Markierungen zeigen die beiden konkurrierenden Änderungen. Sie sind keine gültigen Bestandteile des endgültigen Dateiinhalts.
+
+### Konflikt lösen
+
+1. Die betroffene Datei öffnen.
+2. Entscheiden, welche Änderungen übernommen werden sollen.
+3. Die Konfliktmarkierungen entfernen.
+4. Die Datei speichern.
+5. Die gelöste Datei stagen und den Merge abschließen.
+
+```bash
+git status
+git add datei.txt
+git commit
+```
+
+Der letzte Schritt ist bei einem normalen Merge mit Konfliktauflösung üblich. Bei anderen Konfliktsituationen, etwa während eines Rebase, wird der entsprechende Ablauf verwendet.
+
+## Was ist ein Tag?
+
+Tags markieren bestimmte Commits. Sie werden häufig verwendet, um wichtige Versionen eines Projekts zu kennzeichnen.
+
+```mermaid
+gitGraph
+    commit id: "Projektstart"
+    commit id: "Login" tag: "v1.0"
+    commit id: "Bugfix"
+```
+
+### Beispiel
+
+```bash
+git tag v1.0
+git tag
+```
+
+Um einen Tag auf GitHub verfügbar zu machen:
+
+```bash
+git push origin v1.0
+```
+
+### Typische Verwendungen
+
+- Releases
+- Meilensteine
+- Versionsnummern
+- Markierung wichtiger Projektstände
+
+## Was ist Git Bisect?
+
+`git bisect` hilft dabei, den Commit zu finden, durch den ein Fehler entstanden ist. Dafür verwendet Git eine binäre Suche: Der zu untersuchende Bereich wird schrittweise verkleinert.
 
 ```mermaid
 flowchart TD
-
-  * A[Issue]
-    B[Feature Branch]
-  * C[Commit]
-    D[*ull Request]
-    E[Merge]
-    F[*ssue Closed]
-
-    A*--> B
-    B --> C
-   *C --> D
-    D --> E
-    E*--> F
+    A["Bekannter funktionierender Commit"] --> B["Mitte der Historie testen"]
+    B --> C{"Fehler vorhanden?"}
+    C -->|Ja| D["Früheren Bereich untersuchen"]
+    C -->|Nein| E["Späteren Bereich untersuchen"]
+    D --> F["Suchbereich verkleinern"]
+    E --> F
+    F --> G["Fehlerhaften Commit finden"]
 ```
 
-*## Typische Anwendungsfälle
+### Beispiel
 
-- Bug*
-- Features
--*Verbesserungsvorschläge
--*Aufgabenverwaltung
+```bash
+git bisect start
+git bisect bad
+git bisect good <commit-hash>
+```
+
+Git wechselt anschließend zu einem zu testenden Commit. Nach jedem Test wird das Ergebnis angegeben:
+
+```bash
+git bisect good
+```
+
+oder:
+
+```bash
+git bisect bad
+```
+
+Nach der Suche:
+
+```bash
+git bisect reset
+```
+
+### Vorteile
+
+- Verwendet eine binäre Suche
+- Benötigt bei langen Historien oft deutlich weniger Tests als das manuelle Prüfen jedes Commits
+- Unterstützt die gezielte Fehlersuche
 
 ---
 
-* Entwicklungsumgebungen
+# 3. GitHub-Grundlagen
 
-Git wird*von vielen Entwicklungs*mgebungen unterstützt:
+## Was ist GitHub?
 
-- VS Code
-* Visual Studio
-- JetBrains IDEs
-- *code
+GitHub ist eine Plattform für das Hosten von Git-Repositorys und die Zusammenarbeit an Softwareprojekten.
 
-```mer*aid
-flowchart TD
-    Git*--> VSCode
-    Git*--> VisualStudio
-   *Git --> JetBrains
-    Git*--> Xcode
+### Eigenschaften
+
+- Repositorys online speichern und teilen
+- Zusammenarbeit im Team
+- Pull Requests und Code Reviews
+- Issues zur Aufgabenverwaltung
+- Projektorganisation und Automatisierung
+- Dokumentation und Veröffentlichung von Software
+
+```mermaid
+mindmap
+    root((GitHub))
+        Repositories
+        Pull Requests
+        Issues
+        Collaboration
+        Cloud
+        Releases
 ```
 
-*--
+**Unterschied:** Git ist das Versionsverwaltungssystem. GitHub ist eine Plattform, die Git nutzt und zusätzliche Funktionen für die Zusammenarbeit bereitstellt.
 
-# Warum VS Code*
+## Was ist ein Remote-Repository?
 
-- Plattformunabhängig
-- Kostenlo*
-- Sehr gute Git-Integration
-- Von*vielen Entwicklern genutzt
-- Für*nahezu jede Programmiersprache gee*gnet
+Ein Remote-Repository ist eine entfernte Version eines Git-Repositorys, beispielsweise auf GitHub.
 
----
+```mermaid
+flowchart LR
+    A["Lokales Repository"]
+    B["GitHub-Repository"]
 
-* Git Workflow in VS Code
+    A -->|Push| B
+    B -->|Pull / Fetch| A
+```
 
-```merma*d
+### Wichtige Begriffe
+
+- **Local Repository:** Repository auf dem eigenen Computer
+- **Remote Repository:** Repository auf einem entfernten Server
+- **Origin:** Häufig verwendeter Name für das Standard-Remote
+
+### Beispiel
+
+```bash
+git remote -v
+```
+
+Dieser Befehl zeigt die konfigurierten Remote-Verbindungen an.
+
+## Was ist Clone?
+
+Mit `git clone` wird ein bestehendes Repository auf den eigenen Computer kopiert. Dabei werden auch die vorhandene Git-Historie und die Branch-Informationen übernommen.
+
+### Beispiel
+
+```bash
+git clone https://github.com/username/repository.git
+```
+
+Danach kann das Projekt geöffnet und lokal bearbeitet werden:
+
+```bash
+cd repository
+git status
+```
+
+## Push, Pull und Fetch
+
+Diese Befehle synchronisieren lokale und entfernte Repositorys.
+
+```mermaid
 flowchart TD
+    A["Lokales Repository"]
+    B["GitHub-Repository"]
 
-    A*Datei ändern]
-    B[Source Control*
-    C[Stage Changes]
-    D[Commit*
-    E[Push]
+    A -->|git push| B
+    B -->|git fetch| A
+    B -->|git pull| A
+```
+
+### Push
+
+Lädt lokale Commits zum Remote-Repository hoch.
+
+```bash
+git push
+```
+
+### Pull
+
+Holt Änderungen aus dem Remote-Repository und integriert sie in den aktuellen lokalen Branch.
+
+```bash
+git pull
+```
+
+### Fetch
+
+Lädt neue Informationen und Commits vom Remote herunter, ohne sie automatisch in den aktuellen Branch zu integrieren.
+
+```bash
+git fetch
+```
+
+### Sync
+
+Mit „Sync“ ist allgemein gemeint, dass lokale und entfernte Repositorys aufeinander abgestimmt werden. In Visual Studio Code kann die Synchronisierung beispielsweise das Abrufen und Hochladen von Änderungen umfassen.
+
+## Was ist ein Pull Request?
+
+Ein Pull Request (PR) ist ein Vorschlag, Änderungen aus einem Branch in einen anderen Branch zu übernehmen. Er ermöglicht Diskussionen, Code Reviews und Prüfungen vor dem Merge.
+
+```mermaid
+flowchart TD
+    A["Feature-Branch erstellen"]
+    B["Änderungen committen"]
+    C["Branch pushen"]
+    D["Pull Request öffnen"]
+    E["Code Review und Prüfungen"]
+    F["Änderungen zusammenführen"]
+    G["Ziel-Branch aktualisiert"]
 
     A --> B
-   *B --> C
-    C*--> D
+    B --> C
+    C --> D
     D --> E
+    E --> F
+    F --> G
 ```
 
-*--
+### Vorteile
 
-# Learn Git*Branching
+- Höhere Codequalität
+- Nachvollziehbare Änderungen
+- Zusammenarbeit und Diskussion
+- Fehler können vor dem Merge erkannt werden
+- Automatische Tests können eingebunden werden
 
-## Warum Learn Git Bran*hing?
+**Wichtig:** Ein Pull Request ist nicht dasselbe wie ein Commit. Er ist ein Arbeitsablauf zur Überprüfung und Übernahme von Änderungen.
 
-- Keine*Installation erforderlich
-- Sofort*ges Feedback
-- Git-Befehle werden *isualisiert
+## Was ist ein Fork?
+
+Ein Fork ist eine eigene Kopie eines Repositorys auf GitHub. Er wird häufig verwendet, wenn man an einem fremden Projekt mitarbeiten möchte, aber keine direkten Schreibrechte besitzt.
 
 ```mermaid
-flowchart *R
-    A*Git Befehl]
-    B[Visualisierung]
-*   C[Lernen durch Ausprobieren]
+flowchart LR
+    A["Original-Repository"]
+    B["Eigener Fork"]
+    C["Lokales Repository"]
 
- *  A --> B
-    B --> C
+    A -->|Fork| B
+    B -->|Clone| C
+    C -->|Push| B
+    B -->|Pull Request| A
 ```
 
-*--
+### Vorteile
 
-# Vielen Dank
+- Mitarbeit ohne direkte Schreibrechte am Original
+- Eigene Experimente
+- Beiträge zu Open-Source-Projekten
+- Änderungen zunächst unabhängig entwickeln
 
-Happy Coding 🚀*
-````*
+## Was sind Issues?
+
+Issues dienen dazu, Aufgaben, Fehler und Verbesserungsvorschläge zu dokumentieren und zu verwalten.
+
+```mermaid
+flowchart TD
+    A["Issue erstellen"]
+    B["Aufgabe bearbeiten"]
+    C["Änderungen committen"]
+    D["Pull Request öffnen"]
+    E["Änderungen zusammenführen"]
+    F["Issue schließen"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+```
+
+### Typische Anwendungsfälle
+
+- Bugreports
+- Neue Funktionen
+- Verbesserungsvorschläge
+- Aufgabenverwaltung
+- Dokumentation von Problemen
+
+---
+
+# 4. Entwicklungsumgebungen
+
+Git wird von vielen Entwicklungsumgebungen unterstützt.
+
+### Beispiele
+
+- Visual Studio Code
+- Visual Studio
+- JetBrains IDEs, beispielsweise IntelliJ IDEA
+- Xcode
+- Andere Editoren und Entwicklungswerkzeuge
+
+```mermaid
+flowchart TD
+    A["Git"]
+    A --> B["Visual Studio Code"]
+    A --> C["Visual Studio"]
+    A --> D["JetBrains IDEs"]
+    A --> E["Xcode"]
+```
+
+## Warum Visual Studio Code?
+
+- Kostenlos nutzbar
+- Plattformübergreifend
+- Gute Git-Integration
+- Erweiterbar durch Extensions
+- Unterstützung vieler Programmiersprachen
+- Integriertes Terminal
+- Zusammenarbeit über GitHub möglich
+
+## Git-Workflow in VS Code
+
+```mermaid
+flowchart TD
+    A["Datei bearbeiten"]
+    B["Source Control öffnen"]
+    C["Änderungen stagen"]
+    D["Commit-Nachricht eingeben"]
+    E["Commit erstellen"]
+    F["Push / Synchronisieren"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+```
+
+### Typischer Ablauf
+
+1. Projekt in Visual Studio Code öffnen.
+2. Dateien bearbeiten.
+3. In der Ansicht **Source Control** die Änderungen prüfen.
+4. Gewünschte Dateien stagen.
+5. Eine aussagekräftige Commit-Nachricht eingeben.
+6. Den Commit erstellen.
+7. Änderungen zum Remote-Repository pushen.
+
+**Tipp:** Änderungen sollten vor dem Commit geprüft werden. So lassen sich versehentlich hinzugefügte Dateien und unerwünschte Inhalte leichter erkennen.
+
+---
+
+# 5. Learn Git Branching
+
+## Warum Learn Git Branching?
+
+Learn Git Branching ist eine interaktive Lernplattform, auf der Git-Befehle und ihre Auswirkungen auf die Repository-Historie visualisiert werden.
+
+### Vorteile
+
+- Keine lokale Installation erforderlich
+- Direktes Feedback
+- Visualisierung von Branches und Commits
+- Git-Befehle praktisch ausprobieren
+- Schrittweises Lernen
+
+```mermaid
+flowchart LR
+    A["Git-Befehl eingeben"]
+    B["Änderungen visualisieren"]
+    C["Ergebnis nachvollziehen"]
+    D["Weitere Befehle ausprobieren"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> A
+```
+
+## Übung
+
+Versuche, die folgenden Befehle zu verstehen und praktisch anzuwenden:
+
+```bash
+git commit
+git branch feature
+git switch feature
+git merge main
+git rebase main
+```
+
+Achte dabei besonders darauf, wie sich die Commit-Historie verändert.
+
+---
+
+# 6. Vielen Dank!
+
+Vielen Dank für die Teilnahme am Git & GitHub Workshop.
+
+**Happy Coding! 🚀**
+
+Weiterführende Ressourcen:
+
+- [Git – Offizielle Dokumentation](https://git-scm.com/doc)
+- [GitHub Docs](https://docs.github.com/)
+- [Visual Studio Code – Git](https://code.visualstudio.com/docs/sourcecontrol/overview)
+- [Learn Git Branching](https://github.com/pcottle/learnGitBranching)
